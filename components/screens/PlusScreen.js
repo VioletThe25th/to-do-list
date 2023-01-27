@@ -1,16 +1,12 @@
 import React from "react";
-import { View, StyleSheet, TextInput, KeyboardAvoidingView, Image } from "react-native";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Appbar, FAB, useTheme, Button } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, StyleSheet, TextInput, KeyboardAvoidingView, Image, Text } from "react-native";
+import { Button } from 'react-native-paper';
 
 
 function PlusScreen({navigation}) {
     return(
         <View style={styles.container}>
-            <View style={styles.ListItem}>
-                <Button title="Go back" 
+            <Button title="Go back" 
                     onPress={() => navigation.goBack()} 
                     style={styles.goBack} 
                     icon={({ size, color }) => (
@@ -18,7 +14,9 @@ function PlusScreen({navigation}) {
                             source={require('../../assets/arrow-left-36.png')}
                             style={styles.goBack}
                         />
-                )}></Button>
+            )}></Button>
+            <View style={styles.ListItem}>
+                <Text style={styles.Title}>Add a new task</Text>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={styles.TaskWrapper}
                     >
@@ -32,10 +30,17 @@ function PlusScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#E2E8ED'
+        backgroundColor: '#E2E8ED',
+        paddingTop: 40,
+    },
+    Title: {
+        fontWeight: "bold",
+        fontSize: 30,
     },
     ListItem: {
         paddingTop: 40,
+        marginLeft: 20,
+        marginRight: 20,
         //justifyContent: 'space-between',
     },
     goBack: {
@@ -51,10 +56,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderRadius: 60,
         marginTop: 20,
+        borderColor: '#C0C0C0',
+        borderWidth: 1,
     },
     TaskName: {
-        backgroundColor: '#FFF',
-        paddingHorizontal: 20,
+
     },
 })
 
