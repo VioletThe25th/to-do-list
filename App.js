@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { HomeScreen } from './components/screens';
+import { HomeScreen, PlusScreen } from './components/screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackRouter } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator(); // Stack contains Screen & Navigator properties
 
@@ -14,6 +14,7 @@ export default function App() {
           headerShown: false
         }}>
         <Stack.Screen name="To Do List" component={HomeScreen} />
+        <Stack.Screen name="PlusScreen" component={PlusScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

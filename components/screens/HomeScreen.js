@@ -19,7 +19,7 @@ function HomeScreen({navigation}){
                     mode="flat"
                     size="medium"
                     icon="plus"
-                    onPress={() => {}}
+                    onPress={() => navigation.navigate('PlusScreen')}
                     style={[
                     styles.fab,
                     { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
