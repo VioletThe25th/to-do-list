@@ -10,22 +10,11 @@ const BOTTOM_APPBAR_HEIGHT = 80;
 const MEDIUM_FAB_HEIGHT = 56;
 
 function HomeScreen({navigation}){
-    const { bottom } = useSafeAreaInsets();
-    const theme = useTheme();
     return(
-        
         // To do list
         <View style={styles.container}>
-            {/* <Appbar.Header>
-                <Appbar.BackAction onPress={() => {}} />
-                <Appbar.Content title="" />
-                <Appbar.Action icon="calendar" onPress={() => {}} />
-                <Appbar.Action icon="magnify" onPress={() => {}} />
-            </Appbar.Header> */}
             <View style={styles.toDoList}>
-                <Text style={styles.Title}>
-                    To Do List
-                </Text>
+                <Text style={styles.Title}>To Do List</Text>
                 <FAB
                     mode="flat"
                     size="medium"
@@ -36,27 +25,12 @@ function HomeScreen({navigation}){
                     { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
                     ]}
                 />
-
+                {/* List of differents tasks */}
                 <View style={styles.List}>
-
+                    <Task text='Task 1'></Task>
+                    <Task text='Task 2'></Task>
                 </View>
             </View>
-            {/* <Appbar
-                style={[
-                    styles.bottom,
-                    {
-                    height: BOTTOM_APPBAR_HEIGHT + bottom,
-                    backgroundColor: theme.colors.elevation.level2,
-                    },
-                ]}
-                safeAreaInsets={{ bottom }}
-                >
-                <Appbar.Action icon="archive" onPress={() => {}} />
-                <Appbar.Action icon="email" onPress={() => {}} />
-                <Appbar.Action icon="label" onPress={() => {}} />
-                <Appbar.Action icon="delete" onPress={() => {}} />
-                
-            </Appbar> */}
         </View>
     );
 }
@@ -76,7 +50,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
     },
     List: {
-
+        marginTop: 30,
     },
     bottom: {
         backgroundColor: 'aquamarine',
