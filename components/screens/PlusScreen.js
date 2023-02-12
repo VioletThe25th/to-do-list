@@ -1,13 +1,53 @@
-import React from "react";
-import { View, StyleSheet, TextInput, KeyboardAvoidingView, Image, Text } from "react-native";
+import { setStatusBarBackgroundColor } from "expo-status-bar";
+import React, { useEffect,useState } from "react";
+import { View, StyleSheet, TextInput, KeyboardAvoidingView, Image, Text, Keyboard } from "react-native";
 import { Button } from 'react-native-paper';
+import { Appbar, FAB, useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const BOTTOM_APPBAR_HEIGHT = 80;
+const MEDIUM_FAB_HEIGHT = 56;
 
-function PlusScreen({navigation}) {
+function PlusScreen({navigation} ) {
+    const [task, setTask] = useState("");
+    const [taskItems, setTaskItems] = useState([]);
+
+    const handleAddTask = () => {
+    Keyboard.dismiss();
+    if(!task.trim()) {
+        alert('Enter Task');
+        return;
+    }
+    alert('Success');
+    taskItems.push(task);
+    storeData(taskItems);
+    }
+    const getData = async () => {
+        try {
+            await AsyncStorage.getItem("tasks").then(data =>setTaskItems(JSON.parse(data)))
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(()=> {
+        getData();
+    }, [taskItems])
+
+    const storeData = async (taskItems) => {
+        try {
+            await AsyncStorage.setItem("tasks", JSON.stringify(taskItems));
+            console.log('Stored tasks', JSON.stringify(taskItems));
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return(
         <View style={styles.container}>
             <Button title="Go back" 
-                    onPress={() => navigation.goBack()} 
+                    onPress={() => navigation.navigate('HomeScreen')} 
                     style={styles.goBack} 
                     icon={({ size, color }) => (
                         <Image
@@ -20,8 +60,18 @@ function PlusScreen({navigation}) {
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={styles.TaskWrapper}
                     >
-                        <TextInput styles={styles.TaskName} placeholder={'Task Name'}></TextInput>
+                        <TextInput styles={styles.TaskName} placeholder={'Task Name'} value= {task}onChangeText={text => setTask(text)}></TextInput>
                 </KeyboardAvoidingView>
+                <FAB
+                    mode="flat"
+                    size="medium"
+                    icon="plus"
+                    onPress = {() => handleAddTask()}
+                    style={[
+                    styles.fab,
+                    { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
+                    ]}
+                />
             </View>
         </View>
     )
@@ -49,7 +99,7 @@ const styles = StyleSheet.create({
 
     },
     TaskWrapper: {
-        width: '100%',
+        width: '70%',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         backgroundColor: '#FFF',
@@ -59,8 +109,14 @@ const styles = StyleSheet.create({
         borderColor: '#C0C0C0',
         borderWidth: 1,
     },
+    fab: {
+        position: 'absolute',
+        right: 20,
+        marginTop: 70,
+        backgroundColor: '#fff'
+    },
     TaskName: {
-
+        
     },
 })
 

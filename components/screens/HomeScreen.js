@@ -1,15 +1,60 @@
-import React from "react";
-import { StyleSheet, Button, View, Text } from 'react-native';
+import React, { useEffect,useState } from "react";
+import { StyleSheet, Alert, Button, View, Text, TouchableOpacity } from 'react-native';
 import { Task } from '../Task';
+import { PlusScreen } from './PlusScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Appbar, FAB, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BOTTOM_APPBAR_HEIGHT = 80;
 const MEDIUM_FAB_HEIGHT = 56;
 
 function HomeScreen({navigation}){
+    const [tasks, setTasks] = useState([]);
+
+    const getData = async () => {
+        try {
+            await AsyncStorage.getItem("tasks").then(data =>setTasks(JSON.parse(data)) ) 
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(()=> {
+        getData();
+    }, [tasks])
+
+    const completeTask = (index) => {
+        return Alert.alert(
+        "Alert Title",
+        "Are you sure you want to delete this task?",
+        [
+            {
+                text: "Yes",
+                onPress: () => {
+                var itemsCopy = [...tasks];
+                itemsCopy.splice(index, 1);
+                setTasks(itemsCopy);
+                storeData(itemsCopy);
+                },
+            },
+            {
+                text: "No",
+            }
+        ]);
+    }
+
+    const storeData = async (itemsCopy) => {
+        try {
+            await AsyncStorage.setItem("tasks", JSON.stringify(itemsCopy));
+            console.log('All tasks', JSON.stringify(itemsCopy));
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     return(
         // To do list
         <View style={styles.container}>
@@ -27,8 +72,13 @@ function HomeScreen({navigation}){
                 />
                 {/* List of differents tasks */}
                 <View style={styles.List}>
-                    <Task text='Task 1'></Task>
-                    <Task text='Task 2'></Task>
+                    {
+                            tasks.map((item, index) => {
+                            return  <Task key ={index} text = {item} onPress={() => completeTask(index)}/>
+                        })
+                    }
+                    {/* <Task text='Task 1'></Task>
+                    <Task text='Task 2'></Task>*/}
                 </View>
             </View>
         </View>

@@ -16,7 +16,7 @@ function Task(props){
                 />
                 <Text style={styles.ListText}>{props.text}</Text>
             </View>
-            <Button style={styles.Delete} icon={({ size, color }) => (
+            <Button onPress={props.onPress} style={styles.Delete} icon={({ size, color }) => (
                     <Image
                         source={require('../assets/delete-24.png')}
                         style={styles.Delete}

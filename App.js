@@ -13,7 +13,7 @@ export default function App() {
         screenOptions={{
           headerShown: false
         }}>
-        <Stack.Screen name="To Do List" component={HomeScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="PlusScreen" component={PlusScreen} />
       </Stack.Navigator>
     </NavigationContainer>
