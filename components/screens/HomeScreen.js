@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { StyleSheet, Alert, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, Alert, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Task } from '../Task';
 import { FAB } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,8 +7,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const BOTTOM_APPBAR_HEIGHT = 80;
 const MEDIUM_FAB_HEIGHT = 56;
 
-function HomeScreen({navigation}){
+function HomeScreen({navigation, route}) {
+
+    //const { task } = route.params;
+
+    // let { modifiedTask } = {}
+    // if (modifiedTask == undefined) {
+    //     modifiedTask = tasks[0]
+    // } else {
+    //     modifiedTask = route.params.task;
+    // }
+
     const [tasks, setTasks] = useState([]);
+    const [tasksIds, setTasksIds] = useState([]);
+    /*
     
     const getData = async (itemList) => {
         try {
@@ -61,21 +73,87 @@ function HomeScreen({navigation}){
         ]);
     }
 
-    return(
-        // To do list
-        <View style={styles.container}>
-            <View style={styles.toDoList}>
-                <Text style={styles.Title}>To Do List</Text>
+*/
+
+    // get already stocked tasks when the page is load up or when the navigation or the routes changes
+    useEffect(() => {
+        async function fetchData() {
+            //const modifiedTask = task;
+            //console.log(modifiedTask);
+            try {
+                const jsonValue = await AsyncStorage.getItem('tasksIds')
+                jsonValue != null ? setTasksIds(JSON.parse(jsonValue)) : null;
+                //const taskValue = await AsyncStorage.getItem(`modifiedTask-${id}`)
+                //modifiedTask.splice(taskValue, 1);
+
+            } catch (error)  {
+                console.log(error);
+            }
+        }
+        fetchData();
+    }, [navigation, route])
+
+
+    // Put new Tasks in the state
+    useEffect(() => {
+        try {
+            if (tasksIds.length > 0) {
+                const newTasks = [];
+                tasksIds.forEach(async (id) => {
+                    const jsonValue = await AsyncStorage.getItem(`task-${id}`)
+                    newTasks.push(JSON.parse(jsonValue));
+                    if (newTasks.length === tasksIds.length) {
+                        setTasks(newTasks);
+                    }
+                })
+            }
+            //console.log(tasks)
+        } catch (error) {
+            console.log(error);
+        }
+    }, [tasksIds])
+
+    //console.log(tasksIds)
+    //console.log(tasks)
+    //AsyncStorage.clear()
+    /*
+    
+    //Add a button to go to the PlusScreen
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
                 <FAB
                     mode="flat"
                     size="medium"
                     icon="plus"
-                    onPress={() => navigation.navigate('PlusScreen')}
+                    onPress={() => navigation.navigate('PlusScreen', {tasks: tasks, tasksIds: tasksIds})}
                     style={[
                     styles.fab,
                     { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
                     ]}
                 />
+            )
+        });
+    }, [navigation, route, tasksIds, tasks])
+*/
+    return(
+        // To do list
+        <View style={styles.container}>
+            <View style={styles.toDoList}>
+                <Text style={styles.Title}>To Do List</Text>
+
+                {/* Add a button to go to the screen that add a new Task */}
+                <FAB
+                    mode="flat"
+                    size="medium"
+                    icon="plus"
+                    onPress={() => navigation.navigate('PlusScreen', {tasks: tasks, tasksIds: tasksIds})}
+                    style={[
+                    styles.fab,
+                    { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
+                    ]}
+                />
+
                 {/* List of differents tasks */}
                 {!tasks?.length ? 
                 (
@@ -86,8 +164,8 @@ function HomeScreen({navigation}){
                     <ScrollView>
                         <View style={styles.List}>
                         {
-                                tasks.map((item, index) => {
-                                return  <Task key ={index} text = {item} onPress={() => deleteTask(index)}/>
+                                tasks.map((task) => {
+                                return  <Task key ={task.id} task = {task} navigation={navigation}/>
                             })
                         }
                         {/* <Task text='Task 1'></Task>
@@ -131,6 +209,9 @@ const styles = StyleSheet.create({
         marginTop: 60,
         backgroundColor: '#fff'
     },
+    addButton: {
+        fontSize: 30,
+    }
 })
 
 export {HomeScreen};

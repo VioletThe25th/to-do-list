@@ -1,23 +1,49 @@
-import { setStatusBarBackgroundColor } from "expo-status-bar";
 import React, { useEffect,useState } from "react";
-import { View, StyleSheet, TextInput, KeyboardAvoidingView, Image, Text, Keyboard } from "react-native";
+import { View, StyleSheet, TextInput, KeyboardAvoidingView, Image, Text } from "react-native";
 import { Button } from 'react-native-paper';
-import { Appbar, FAB, useTheme } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FAB } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {HomeScreen} from './index';
 
 const BOTTOM_APPBAR_HEIGHT = 80;
 const MEDIUM_FAB_HEIGHT = 56;
 
-function PlusScreen({navigation} ) {
-    const [task, setTask] = useState("");
-    const [taskItems, setTaskItems] = useState([]);
+function PlusScreen({navigation, route} ) {
 
+    //console.log(route.params.tasksIds)
+
+    const [name, setName] = useState("");
+    const [details, setDetails] = useState("");
+    const [error, setError] = useState("");
+
+    const saveTask = async () => {
+        try {
+            const newId = route.params.tasks.length > 0 ? route.params.tasks[route.params.tasks.length - 1].id + 1 : 0;
+            const updatedIds = [...route.params.tasksIds, newId];
+            const newTask = {
+                id: newId,
+                name: name,
+                details: details,
+                state: false,
+            };
+
+            await AsyncStorage.setItem('tasksIds', JSON.stringify(updatedIds));
+            await AsyncStorage.setItem(`task-${newId}`, JSON.stringify(newTask));
+            navigation.navigate('HomeScreen', {ids: updatedIds});
+            //console.log(newTask)
+            //console.log(route.params.updatedIds)
+
+        } catch (error) {
+            console.clear();
+            console.log(error);
+            setError(error);
+        }
+    }
+
+    /*
     const getData = async (itemList) => {
         try {
-            //await AsyncStorage.multiGet(itemList.text, )
-            await AsyncStorage.getItem("tasks").then(data =>setTasks(JSON.parse(data)))
+            await AsyncStorage.multiGet(itemList.text, )
+            //await AsyncStorage.getItem("tasks").then(data =>setTask(JSON.parse(data)))
         } catch(e) {
             console.log(e);
         }
@@ -37,7 +63,7 @@ function PlusScreen({navigation} ) {
 
     const storeData = async (item) => {
         try {
-            await AsyncStorage.setItem(item.text, JSON.stringify(item));
+            await AsyncStorage.setItem(item.task.id, JSON.stringify(item));
             console.log('Stored tasks', JSON.stringify(item));
         } catch (e) {
             console.log(e);
@@ -47,6 +73,8 @@ function PlusScreen({navigation} ) {
     useEffect(()=> {
         getData();
     }, [taskItems])
+
+    */
 
     return(
         <View style={styles.container}>
@@ -61,22 +89,28 @@ function PlusScreen({navigation} ) {
             )}></Button>
             <View style={styles.ListItem}>
                 <Text style={styles.Title}>Add a new task</Text>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    style={styles.TaskWrapper}
-                    >
-                        <TextInput styles={styles.TaskName} placeholder={'Task Name'} value= {task}onChangeText={text => setTask(text)}></TextInput>
-                </KeyboardAvoidingView>
                 <FAB
                     mode="flat"
                     size="medium"
                     icon="plus"
-                    onPress = {() => handleAddTask()}
+                    onPress = {() => saveTask()}
                     style={[
                     styles.fab,
                     { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
                     ]}
                 />
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    style={styles.TaskWrapper}
+                    >
+                        <TextInput styles={styles.TaskName} placeholder={'Task Name'} onChangeText={setName} value={name}></TextInput>
+                </KeyboardAvoidingView>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    style={styles.TaskWrapper}
+                    >
+                        <TextInput styles={styles.TaskName} placeholder={'Task Description'} onChangeText={setDetails} value={details}></TextInput>
+                </KeyboardAvoidingView>
             </View>
+            {error ? <Text>{error.toString()}</Text> : null}
         </View>
     )
 }
@@ -92,7 +126,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
     },
     ListItem: {
-        paddingTop: 40,
+        paddingTop: 10,
         marginLeft: 20,
         marginRight: 20,
         //justifyContent: 'space-between',
@@ -116,8 +150,7 @@ const styles = StyleSheet.create({
     fab: {
         position: 'absolute',
         right: 20,
-        marginTop: 70,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
     },
     TaskName: {
         
