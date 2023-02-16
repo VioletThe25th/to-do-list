@@ -5,6 +5,7 @@ import { Button } from 'react-native-paper';
 import { Appbar, FAB, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {HomeScreen} from './index';
 
 const BOTTOM_APPBAR_HEIGHT = 80;
 const MEDIUM_FAB_HEIGHT = 56;
@@ -13,20 +14,32 @@ function PlusScreen({navigation} ) {
     const [task, setTask] = useState("");
     const [taskItems, setTaskItems] = useState([]);
 
-    const handleAddTask = () => {
-    Keyboard.dismiss();
-    if(!task.trim()) {
-        alert('Enter Task');
-        return;
-    }
-    alert('Success');
-    taskItems.push(task);
-    storeData(taskItems);
-    }
-    const getData = async () => {
+    const getData = async (itemList) => {
         try {
-            await AsyncStorage.getItem("tasks").then(data =>setTaskItems(JSON.parse(data)))
+            //await AsyncStorage.multiGet(itemList.text, )
+            await AsyncStorage.getItem("tasks").then(data =>setTasks(JSON.parse(data)))
         } catch(e) {
+            console.log(e);
+        }
+    }
+
+    const handleAddTask = () => {
+        Keyboard.dismiss();
+        if(!task.trim()) {
+            alert('Enter Task');
+            return;
+        }
+        navigation.navigate('HomeScreen');
+        //alert('Success');
+        taskItems?.push(task);
+        storeData(taskItems);
+    }
+
+    const storeData = async (item) => {
+        try {
+            await AsyncStorage.setItem(item.text, JSON.stringify(item));
+            console.log('Stored tasks', JSON.stringify(item));
+        } catch (e) {
             console.log(e);
         }
     }
@@ -34,15 +47,6 @@ function PlusScreen({navigation} ) {
     useEffect(()=> {
         getData();
     }, [taskItems])
-
-    const storeData = async (taskItems) => {
-        try {
-            await AsyncStorage.setItem("tasks", JSON.stringify(taskItems));
-            console.log('Stored tasks', JSON.stringify(taskItems));
-        } catch (e) {
-            console.log(e);
-        }
-    }
 
     return(
         <View style={styles.container}>

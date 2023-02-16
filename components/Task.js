@@ -1,18 +1,26 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 import { Button, Checkbox } from 'react-native-paper';
 
 function Task(props){
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = useState(false);
+    const checkedArray = [];
+
+    const storeData = async (index) => {
+        try {
+            await AsyncStorage.setItem();
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return(
         <View style={styles.List}>
             <View style={styles.ListLeft}>
                 <Checkbox style={styles.Checkbox}
+                // checked ? 'checked' : 'unchecked'
                     status={checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                        setChecked(!checked);
-                    }}
+                    onPress={() => {setChecked(!checked)}}
                 />
                 <Text style={styles.ListText}>{props.text}</Text>
             </View>

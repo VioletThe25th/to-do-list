@@ -1,11 +1,7 @@
 import React, { useEffect,useState } from "react";
-import { StyleSheet, Alert, Button, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Alert, View, Text, ScrollView } from 'react-native';
 import { Task } from '../Task';
-import { PlusScreen } from './PlusScreen';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Appbar, FAB, useTheme } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FAB } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BOTTOM_APPBAR_HEIGHT = 80;
@@ -13,11 +9,30 @@ const MEDIUM_FAB_HEIGHT = 56;
 
 function HomeScreen({navigation}){
     const [tasks, setTasks] = useState([]);
-
-    const getData = async () => {
+    
+    const getData = async (itemList) => {
         try {
-            await AsyncStorage.getItem("tasks").then(data =>setTasks(JSON.parse(data)) ) 
+            //await AsyncStorage.multiGet(itemList.text, )
+            await AsyncStorage.getItem("tasks").then(data =>setTasks(JSON.parse(data)))
         } catch(e) {
+            console.log(e);
+        }
+    }
+
+    const removeData = async (item) => {
+        try {
+            await AsyncStorage.removeItem(item.text, JSON.stringify(item));
+            console.log('All tasks', JSON.stringify(item));
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const storeData = async (item) => {
+        try {
+            await AsyncStorage.setItem(item.text, JSON.stringify(item));
+            console.log('Stored tasks', JSON.stringify(item));
+        } catch (e) {
             console.log(e);
         }
     }
@@ -26,7 +41,7 @@ function HomeScreen({navigation}){
         getData();
     }, [tasks])
 
-    const completeTask = (index) => {
+    const deleteTask = (index) => {
         return Alert.alert(
         "Alert Title",
         "Are you sure you want to delete this task?",
@@ -34,25 +49,16 @@ function HomeScreen({navigation}){
             {
                 text: "Yes",
                 onPress: () => {
-                var itemsCopy = [...tasks];
-                itemsCopy.splice(index, 1);
-                setTasks(itemsCopy);
-                storeData(itemsCopy);
+                    // var itemsCopy = [...tasks];
+                    // itemsCopy.splice(index, 1);
+                    // setTasks(itemsCopy);
+                    removeData(tasks[index]);
                 },
             },
             {
                 text: "No",
             }
         ]);
-    }
-
-    const storeData = async (itemsCopy) => {
-        try {
-            await AsyncStorage.setItem("tasks", JSON.stringify(itemsCopy));
-            console.log('All tasks', JSON.stringify(itemsCopy));
-        } catch (e) {
-            console.log(e)
-        }
     }
 
     return(
@@ -71,15 +77,24 @@ function HomeScreen({navigation}){
                     ]}
                 />
                 {/* List of differents tasks */}
-                <View style={styles.List}>
-                    {
-                            tasks.map((item, index) => {
-                            return  <Task key ={index} text = {item} onPress={() => completeTask(index)}/>
-                        })
-                    }
-                    {/* <Task text='Task 1'></Task>
-                    <Task text='Task 2'></Task>*/}
-                </View>
+                {!tasks?.length ? 
+                (
+                    <View> 
+                        <Text>Aucune tâche pour l'instant</Text>
+                    </View> 
+                ): (
+                    <ScrollView>
+                        <View style={styles.List}>
+                        {
+                                tasks.map((item, index) => {
+                                return  <Task key ={index} text = {item} onPress={() => deleteTask(index)}/>
+                            })
+                        }
+                        {/* <Task text='Task 1'></Task>
+                        <Task text='Task 2'></Task>*/}
+                        </View>
+                    </ScrollView>
+)}
             </View>
         </View>
     );
@@ -98,9 +113,10 @@ const styles = StyleSheet.create({
     Title: {
         fontWeight: "bold",
         fontSize: 30,
+        marginBottom: 30,
     },
     List: {
-        marginTop: 30,
+        marginBottom: 70,
     },
     bottom: {
         backgroundColor: 'aquamarine',
