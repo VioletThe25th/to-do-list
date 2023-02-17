@@ -243,6 +243,25 @@ The `text input` will use the `useState` function `setName` or `setDetails`.
 
 ### Saving the new task
 
+#### Button to save the task
+
+To save a the new task, we use the same button as we did in `HomeScreen`, we call the `saveTask` function when we press the button.
+
+```javaScript
+<FAB
+    mode="flat"
+    size="medium"
+    icon="plus"
+    onPress = {() => saveTask()}
+    style={[
+    styles.fab,
+    { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
+    ]}
+/>
+```
+
+#### saveTask function
+
 1. Create a variable `newId` that increment itself if there are already stocked ``tasks`` and put 0 if not
 2. Create a variable `updatedIds` that takes all the already stocked ids
 3. Crate an object `newTask` that has many parameters
@@ -287,7 +306,7 @@ The `TaskScreen` screen is used whenever the user touch the `title` or the `deta
 navigation.navigate("TaskScreen", { task: task });
 ```
 
-We retrieve the task we clicked on :
+We retrieve the task we clicked on, it will be useful to save the task we are editing.
 
 ```javaScript
 const { task } = route.params;

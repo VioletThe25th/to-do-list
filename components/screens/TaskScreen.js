@@ -59,7 +59,7 @@ function TaskScreen({navigation, route} ) {
                         <TextInput styles={styles.TaskName} onChangeText={setDetails} value={details}></TextInput>
                 </KeyboardAvoidingView>
 
-                <Button style={styles.Title} title="Save"
+                <Button style={styles.SaveTask} title="Save"
                     onPress={modifyTask}
                 >Save</Button>
                 {error ? <Text>{error.toString()}</Text> : null}
@@ -101,6 +101,13 @@ const styles = StyleSheet.create({
     TaskName: {
         
     },
+    SaveTask: {
+        fontWeight: "bold",
+        fontSize: 30,
+        color: "black",
+        marginTop: 20,
+        backgroundColor: "white"
+    }
 })
 
 export {TaskScreen};
