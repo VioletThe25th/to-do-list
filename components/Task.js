@@ -41,14 +41,11 @@ function Task({navigation, task}){
     const deleteTask = async () => {
         try {
             await AsyncStorage.removeItem(`task-${task.id}`);
-                const ids = JSON.parse(await AsyncStorage.getItem('tasksIds'));
-                const newIds = ids.filter(id => id !== task.id);
-                await AsyncStorage.setItem('tasksIds', JSON.stringify(newIds));
-                navigation.navigate('HomeScreen', { 'task.id': task });
-                if (newIds == 0) {
-                    await AsyncStorage.removeItem(`task-${task.id}`);
-                }
-                /*
+            const ids = JSON.parse(await AsyncStorage.getItem('tasksIds'));
+            const newIds = ids.filter(id => id !== task.id);
+            await AsyncStorage.setItem('tasksIds', JSON.stringify(newIds));
+            navigation.navigate('HomeScreen', { 'task.id': task });
+            /*
             if (task.doneDate) {
                 await AsyncStorage.removeItem(`dailyTask-${task.id}`);
                 const ids = JSON.parse(await AsyncStorage.getItem('dailyTasksIds'));

@@ -66,7 +66,7 @@ function HomeScreen({navigation, route}) {
 
 */
 
-    // get already stocked tasks when the page is load up or when the navigation or the routes changes
+    // get already stocked tasks when the page is load up or when the navigation / routes changes
     useEffect(() => {
         async function fetchData() {
             try {

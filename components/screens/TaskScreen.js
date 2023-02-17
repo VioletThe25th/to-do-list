@@ -12,7 +12,7 @@ function TaskScreen({navigation, route} ) {
     const [error, setError] = useState("");
 
 
-    //fonction pour modifier la tâche
+    //function that modify the task
     const modifyTask = async () => {
         try {
             const modifiedTask = {
