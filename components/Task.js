@@ -24,12 +24,6 @@ function Task({navigation, task}){
         try {
             const updatedTask = task;
             updatedTask.state = !checked;
-            // if (task.doneDate) {
-            //     updatedTask.donedate = new Date().toJSON().slice(0, 10);
-            //     await AsyncStorage.setItem(`dailyTask-${task.id}`, JSON.stringify(updatedTask));
-            // } else {
-            //     await AsyncStorage.setItem(`task-${task.id}`, JSON.stringify(updatedTask));
-            // }
             await AsyncStorage.setItem(`task-${task.id}`, JSON.stringify(updatedTask));
         } catch (error) {
             console.clear();
@@ -45,25 +39,6 @@ function Task({navigation, task}){
             const newIds = ids.filter(id => id !== task.id);
             await AsyncStorage.setItem('tasksIds', JSON.stringify(newIds));
             navigation.navigate('HomeScreen', { 'task.id': task });
-            /*
-            if (task.doneDate) {
-                await AsyncStorage.removeItem(`dailyTask-${task.id}`);
-                const ids = JSON.parse(await AsyncStorage.getItem('dailyTasksIds'));
-                const newIds = ids.filter(id => id !== task.id);
-                await AsyncStorage.setItem('dailyTasksIds', JSON.stringify(newIds));
-                navigation.navigate('DailyScreen', { 'task.id': task });
-            }
-            else {
-                await AsyncStorage.removeItem(`task-${task.id}`);
-                const ids = JSON.parse(await AsyncStorage.getItem('tasksIds'));
-                const newIds = ids.filter(id => id !== task.id);
-                await AsyncStorage.setItem('tasksIds', JSON.stringify(newIds));
-                navigation.navigate('HomeScreen', { 'task.id': task });
-                if (newIds == 0) {
-                    await AsyncStorage.removeItem(`task-${task.id}`);
-                }
-            }
-            */
         } catch (error) {
             console.clear();
             console.log(error);
