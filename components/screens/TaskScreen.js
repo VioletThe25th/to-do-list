@@ -11,6 +11,8 @@ function TaskScreen({navigation, route} ) {
     const [details, setDetails] = useState(task.details);
     const [error, setError] = useState("");
 
+
+    //fonction pour modifier la tâche
     const modifyTask = async () => {
         try {
             const modifiedTask = {
@@ -19,10 +21,9 @@ function TaskScreen({navigation, route} ) {
                 details: details,
                 state: task.state,
             };
-            await AsyncStorage.setItem(`task`, JSON.stringify(modifiedTask));
-            navigation.navigate('HomeScreen', {task: modifiedTask});
+            await AsyncStorage.setItem(`task-${task.id}`, JSON.stringify(modifiedTask));
+            navigation.navigate('HomeScreen', {'task.id': modifiedTask});
             console.log(modifiedTask)
-            //console.log(route.params.updatedIds)
 
         } catch (error) {
             console.clear();

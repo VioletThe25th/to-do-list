@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { StyleSheet, Alert, View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Task } from '../Task';
 import { FAB } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,15 +8,6 @@ const BOTTOM_APPBAR_HEIGHT = 80;
 const MEDIUM_FAB_HEIGHT = 56;
 
 function HomeScreen({navigation, route}) {
-
-    //const { task } = route.params;
-
-    // let { modifiedTask } = {}
-    // if (modifiedTask == undefined) {
-    //     modifiedTask = tasks[0]
-    // } else {
-    //     modifiedTask = route.params.task;
-    // }
 
     const [tasks, setTasks] = useState([]);
     const [tasksIds, setTasksIds] = useState([]);
@@ -78,14 +69,9 @@ function HomeScreen({navigation, route}) {
     // get already stocked tasks when the page is load up or when the navigation or the routes changes
     useEffect(() => {
         async function fetchData() {
-            //const modifiedTask = task;
-            //console.log(modifiedTask);
             try {
                 const jsonValue = await AsyncStorage.getItem('tasksIds')
                 jsonValue != null ? setTasksIds(JSON.parse(jsonValue)) : null;
-                //const taskValue = await AsyncStorage.getItem(`modifiedTask-${id}`)
-                //modifiedTask.splice(taskValue, 1);
-
             } catch (error)  {
                 console.log(error);
             }
@@ -107,14 +93,11 @@ function HomeScreen({navigation, route}) {
                     }
                 })
             }
-            //console.log(tasks)
         } catch (error) {
             console.log(error);
         }
     }, [tasksIds])
-
-    //console.log(tasksIds)
-    //console.log(tasks)
+    
     //AsyncStorage.clear()
     /*
     

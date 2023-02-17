@@ -1,8 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { HomeScreen, PlusScreen, TaskScreen } from './components/screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, StackRouter } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator(); // Stack contains Screen & Navigator properties
 

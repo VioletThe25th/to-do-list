@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, TextInput, KeyboardAvoidingView, Image, Text } from "react-native";
 import { Button } from 'react-native-paper';
 import { FAB } from 'react-native-paper';
@@ -8,8 +8,6 @@ const BOTTOM_APPBAR_HEIGHT = 80;
 const MEDIUM_FAB_HEIGHT = 56;
 
 function PlusScreen({navigation, route} ) {
-
-    //console.log(route.params.tasksIds)
 
     const [name, setName] = useState("");
     const [details, setDetails] = useState("");
@@ -29,8 +27,6 @@ function PlusScreen({navigation, route} ) {
             await AsyncStorage.setItem('tasksIds', JSON.stringify(updatedIds));
             await AsyncStorage.setItem(`task-${newId}`, JSON.stringify(newTask));
             navigation.navigate('HomeScreen', {ids: updatedIds});
-            //console.log(newTask)
-            //console.log(route.params.updatedIds)
 
         } catch (error) {
             console.clear();
@@ -129,12 +125,9 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         marginLeft: 20,
         marginRight: 20,
-        //justifyContent: 'space-between',
     },
     goBack: {
         alignItems: 'flex-start',
-        //backgroundColor: '#fff',
-
     },
     TaskWrapper: {
         width: '70%',
@@ -153,7 +146,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     TaskName: {
-        
     },
 })
 
